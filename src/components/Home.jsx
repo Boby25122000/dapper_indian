@@ -16,7 +16,7 @@ export default function Home() {
 
       {/* Image Animation */}
       <motion.img
-        src="/public/assets/homeWallpaper.png"
+        src="/assets/homeWallpaper.png"
         alt="Home Wallpaper"
         className="w-10/12 max-w-2xl rounded-lg object-contain"
         initial={{ opacity: 0, y: 80, scale: 0.9 }} // start state
