@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="flex flex-col justify-center items-center min-h-[80vh] bg-[#000055] text-white py-10 overflow-hidden">
+    <div className="flex flex-col justify-center items-center md:min-h-[70vh] min-h-[40vh] bg-[#000055] text-white py-10 overflow-hidden">
       {/* Text Animation */}
       <motion.h1
         className="font-bold text-3xl mb-6 md:text-5xl"
