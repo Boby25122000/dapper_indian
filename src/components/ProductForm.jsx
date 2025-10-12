@@ -10,10 +10,12 @@ export default function ProductForm({ editingProduct, onSave }) {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
 
+  const MAX_IMAGES = 10;
+
   const handleFiles = (e) => {
     const filesArray = Array.from(e.target.files);
-    if (filesArray.length + images.length > 6) {
-      alert("Maximum 6 images allowed");
+    if (filesArray.length + images.length > MAX_IMAGES) {
+      alert(`Maximum ${MAX_IMAGES} images allowed`);
       return;
     }
     setImages((prev) => [...prev, ...filesArray]);
@@ -88,7 +90,7 @@ export default function ProductForm({ editingProduct, onSave }) {
             htmlFor="fileInput"
             className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
           >
-            {uploading ? "Uploading..." : "Choose Images"}
+            {uploading ? "Uploading..." : `Choose Images (${images.length}/${MAX_IMAGES})`}
           </label>
           <input
             id="fileInput"
@@ -121,7 +123,7 @@ export default function ProductForm({ editingProduct, onSave }) {
 
         <button
           type="submit"
-          disabled={uploading}
+          disabled={uploading || images.length === 0}
           className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer disabled:opacity-50"
         >
           {uploading ? "Uploading..." : "Upload Product"}
