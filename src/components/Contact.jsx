@@ -27,17 +27,17 @@ export default function Contact() {
 
         {/* Phone */}
         <Link
-          to="tel:+919876543210"
+          to="tel:+919820684505"
           className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition"
         >
           <Phone className="h-10 w-10 text-green-500 mb-3" />
           <span className="font-semibold">Call Us</span>
-          <p className="text-sm text-gray-600">+91 9876543210</p>
+          <p className="text-sm text-gray-600">+91 9820684505</p>
         </Link>
 
         {/* WhatsApp */}
         <Link
-          to="https://wa.me/919876543210"
+          to="https://wa.me/919820684505"
           target="_blank"
           className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition"
         >
