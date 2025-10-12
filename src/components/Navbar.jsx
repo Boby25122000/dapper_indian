@@ -15,7 +15,7 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
         className="font-bold text-lg md:text-2xl flex items-center gap-2"
         onClick={handleClose}
       >
-        <img className="h-10 md:h-12" src="./src/assets/logo.jpg" alt="Logo" />
+        <img className="h-10 md:h-12" src="/public/assets/logo.jpg" alt="Logo" />
         <span className="hidden md:inline text-[#000055] font-serif text-3xl">
           DAPPER INDIAN
         </span>
