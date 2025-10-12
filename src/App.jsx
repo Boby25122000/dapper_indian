@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -98,45 +97,47 @@ function App() {
 
   return (
     <Router>
-      {/* ✅ Navbar */}
       <Navbar
         isSeller={!!isSeller}
         onLogin={() => setShowLogin(true)}
         onLogout={logout}
       />
 
-      {/* ✅ Login Modal */}
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
-      {/* ✅ Routes */}
       <main className="mx-auto">
         <Routes>
+          {/* ✅ Home page */}
           <Route
             path="/"
             element={
-              isSeller ? (
-                <ProductForm
-                  onSave={handleSaveProduct}
-                  editingProduct={editing}
+              <>
+                {isSeller ? (
+                  <ProductForm
+                    onSave={handleSaveProduct}
+                    editingProduct={editing}
+                  />
+                ) : (
+                  <Home />
+                )}
+
+                {/* ✅ ProductList ab sirf home page par dikhega */}
+                <ProductList
+                  products={products}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onLike={handleLike}
+                  onComment={handleComment}
+                  isSeller={!!isSeller}
                 />
-              ) : (
-                <Home />
-              )
+              </>
             }
           />
+
+          {/* ✅ Other pages */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
-
-        {/* ✅ Product List - visible everywhere */}
-        <ProductList
-          products={products}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onLike={handleLike}
-          onComment={handleComment}
-          isSeller={!!isSeller}
-        />
       </main>
     </Router>
   );
