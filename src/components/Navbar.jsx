@@ -1,15 +1,18 @@
-// src/components/Navbar.jsx
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
-export default function Navbar({ isSeller, onLogin, onLogout }) {
+export default function Navbar({ isSeller, onLogin, onLogout, onAddProduct }) {
   const [isOpen, setIsOpen] = useState(false);
-
   const handleClose = () => setIsOpen(false);
+
+  // Common button class for same look
+  const baseBtn =
+    "px-4 py-2 rounded-md text-white font-semibold text-base border-2 transition-all duration-200";
 
   return (
     <nav className="px-4 py-3 flex justify-between items-center border-[#e3000f] border-2 bg-white md:px-8 md:py-4 relative">
+      {/* LOGO */}
       <Link
         to="/"
         className="font-bold text-lg md:text-2xl flex items-center gap-2"
@@ -27,11 +30,11 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
           <li>
             <NavLink
               to="/about"
-              className={({ isActive }) => {
-                return isActive
+              className={({ isActive }) =>
+                isActive
                   ? "bg-[#000055] text-white px-5 py-1 rounded"
-                  : "";
-              }}
+                  : ""
+              }
             >
               ABOUT
             </NavLink>
@@ -39,31 +42,38 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
           <li>
             <NavLink
               to="/contact"
-              className={({ isActive }) => {
-                return isActive
+              className={({ isActive }) =>
+                isActive
                   ? "bg-[#000055] text-white px-5 py-1 rounded"
-                  : "";
-              }}
+                  : ""
+              }
             >
               CONTACT
             </NavLink>
           </li>
         </ul>
 
+        {/* 🔹 Add Product Button (Visible only for Seller) */}
+        {isSeller && (
+          <button
+            className={`${baseBtn} bg-green-600 border-green-600 hover:bg-white hover:text-green-600`}
+            onClick={onAddProduct}
+          >
+            Add Product
+          </button>
+        )}
+
+        {/* 🔹 Login / Logout Buttons */}
         {isSeller ? (
           <button
-            className="px-2 py-1 text-white bg-red-600 rounded-md cursor-pointer 
-                     hover:bg-white hover:text-red-600 hover:border-red-600 hover:border-2
-                     md:px-4 md:py-1.5 md:text-lg"
+            className={`${baseBtn} bg-red-600 border-red-600 hover:bg-white hover:text-red-600`}
             onClick={onLogout}
           >
             Logout
           </button>
         ) : (
           <button
-            className="px-2 py-1 bg-blue-400 text-white rounded-md border-blue-400 cursor-pointer
-                     hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border-2
-                     md:px-4 md:py-1.5 md:text-lg"
+            className={`${baseBtn} bg-blue-500 border-blue-500 hover:bg-white hover:text-blue-500`}
             onClick={onLogin}
           >
             Login
@@ -74,11 +84,7 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
       {/* Mobile Hamburger */}
       <div className="md:hidden text-[#000055]">
         <button onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? (
-            <X size={28} className="text-[#e3000f]" />
-          ) : (
-            <Menu size={28} />
-          )}
+          {isOpen ? <X size={28} className="text-[#e3000f]" /> : <Menu size={28} />}
         </button>
       </div>
 
@@ -89,11 +95,11 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
             <li>
               <NavLink
                 to="/about"
-                className={({ isActive }) => {
-                  return isActive
+                className={({ isActive }) =>
+                  isActive
                     ? "bg-[#000055] text-white px-5 py-1 rounded"
-                    : "";
-                }}
+                    : ""
+                }
                 onClick={handleClose}
               >
                 ABOUT
@@ -102,11 +108,11 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
             <li>
               <NavLink
                 to="/contact"
-                className={({ isActive }) => {
-                  return isActive
+                className={({ isActive }) =>
+                  isActive
                     ? "bg-[#000055] text-white px-5 py-1 rounded"
-                    : "";
-                }}
+                    : ""
+                }
                 onClick={handleClose}
               >
                 CONTACT
@@ -114,10 +120,23 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
             </li>
           </ul>
 
+          {/* 🔹 Add Product Button in Mobile Menu */}
+          {isSeller && (
+            <button
+              className={`${baseBtn} bg-green-600 border-green-600 hover:bg-white hover:text-green-600`}
+              onClick={() => {
+                onAddProduct();
+                handleClose();
+              }}
+            >
+              Add Product
+            </button>
+          )}
+
+          {/* 🔹 Login / Logout Buttons */}
           {isSeller ? (
             <button
-              className="px-4 py-2 text-white bg-red-600 rounded-md cursor-pointer 
-                       hover:bg-white hover:text-red-600 hover:border-red-600 hover:border-2"
+              className={`${baseBtn} bg-red-600 border-red-600 hover:bg-white hover:text-red-600`}
               onClick={() => {
                 onLogout();
                 handleClose();
@@ -127,8 +146,7 @@ export default function Navbar({ isSeller, onLogin, onLogout }) {
             </button>
           ) : (
             <button
-              className="px-4 py-2 bg-blue-400 text-white rounded-md border-blue-400 cursor-pointer
-                       hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border-2"
+              className={`${baseBtn} bg-blue-500 border-blue-500 hover:bg-white hover:text-blue-500`}
               onClick={() => {
                 onLogin();
                 handleClose();

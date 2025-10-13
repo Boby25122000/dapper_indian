@@ -1,30 +1,32 @@
+// src/components/ProductForm.jsx
 import React, { useState } from "react";
 import { db, storage } from "../firebase";
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export default function ProductForm({ editingProduct, onSave }) {
+export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) {
   const [title, setTitle] = useState(editingProduct?.title || "");
   const [description, setDescription] = useState(editingProduct?.description || "");
   const [price, setPrice] = useState(editingProduct?.price || "");
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
 
-  const MAX_IMAGES = 10;
-
+  // 🔹 Handle selected files
   const handleFiles = (e) => {
     const filesArray = Array.from(e.target.files);
-    if (filesArray.length + images.length > MAX_IMAGES) {
-      alert(`Maximum ${MAX_IMAGES} images allowed`);
+    if (filesArray.length + images.length > maxImages) {
+      alert(`Maximum ${maxImages} images allowed`);
       return;
     }
     setImages((prev) => [...prev, ...filesArray]);
   };
 
+  // 🔹 Remove image from preview
   const removeImage = (index) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // 🔹 Submit product
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description || !price) return;
@@ -90,7 +92,7 @@ export default function ProductForm({ editingProduct, onSave }) {
             htmlFor="fileInput"
             className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
           >
-            {uploading ? "Uploading..." : `Choose Images (${images.length}/${MAX_IMAGES})`}
+            {uploading ? "Uploading..." : `Choose Images (${images.length}/${maxImages})`}
           </label>
           <input
             id="fileInput"
@@ -123,7 +125,7 @@ export default function ProductForm({ editingProduct, onSave }) {
 
         <button
           type="submit"
-          disabled={uploading || images.length === 0}
+          disabled={uploading}
           className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer disabled:opacity-50"
         >
           {uploading ? "Uploading..." : "Upload Product"}

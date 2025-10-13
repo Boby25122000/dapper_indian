@@ -17,12 +17,12 @@ export default function Contact() {
       <div className="grid gap-6 md:grid-cols-3">
         {/* Email */}
         <Link
-          to="mailto:example@email.com"
+          to="dapperindian24@gmail.com"
           className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition"
         >
           <Mail className="h-10 w-10 text-blue-500 mb-3" />
           <span className="font-semibold">Email</span>
-          <p className="text-sm text-gray-600">example@email.com</p>
+          <p className="text-sm text-gray-600">dapperindian24@gmail.com</p>
         </Link>
 
         {/* Phone */}
