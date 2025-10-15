@@ -1,8 +1,7 @@
-// src/components/ProductForm.jsx
 import React, { useState } from "react";
 import { db, storage } from "../firebase";
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) {
   const [title, setTitle] = useState(editingProduct?.title || "");
@@ -10,6 +9,7 @@ export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) 
   const [price, setPrice] = useState(editingProduct?.price || "");
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   // 🔹 Handle selected files
   const handleFiles = (e) => {
@@ -32,15 +32,30 @@ export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) 
     if (!title || !description || !price) return;
 
     setUploading(true);
-    try {
-      const uploadedUrls = [];
+    setProgress(0);
 
-      for (const file of images) {
-        const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        uploadedUrls.push(url);
-      }
+    try {
+      const uploadPromises = images.map((file) => {
+        return new Promise((resolve, reject) => {
+          const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
+          const uploadTask = uploadBytesResumable(storageRef, file);
+
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setProgress(Math.round(prog));
+            },
+            (error) => reject(error),
+            async () => {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(url);
+            }
+          );
+        });
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
 
       const productData = { title, description, price, images: uploadedUrls };
 
@@ -52,12 +67,18 @@ export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) 
       }
 
       onSave(productData);
-      setTitle(""); setDescription(""); setPrice(""); setImages([]);
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setImages([]);
+      alert("✅ Product uploaded successfully!");
     } catch (err) {
       console.error(err);
-      alert("Upload failed, try again!");
+      alert("❌ Upload failed, try again!");
     }
+
     setUploading(false);
+    setProgress(0);
   };
 
   return (
@@ -92,7 +113,7 @@ export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) 
             htmlFor="fileInput"
             className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
           >
-            {uploading ? "Uploading..." : `Choose Images (${images.length}/${maxImages})`}
+            {uploading ? `Uploading... (${progress}%)` : `Choose Images (${images.length}/${maxImages})`}
           </label>
           <input
             id="fileInput"
@@ -128,7 +149,7 @@ export default function ProductForm({ editingProduct, onSave, maxImages = 10 }) 
           disabled={uploading}
           className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer disabled:opacity-50"
         >
-          {uploading ? "Uploading..." : "Upload Product"}
+          {uploading ? `Uploading... ${progress}%` : "Upload Product"}
         </button>
       </form>
     </div>
